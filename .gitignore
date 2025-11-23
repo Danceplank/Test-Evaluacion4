@@ -43,3 +43,32 @@ desktop.ini
 /tmp
 *.bak
 *.swp
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Distribution / build
+build/
+dist/
+*.egg-info/
+
+# Editor/IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local data / secrets
+proyecto/data/
+*.sqlite3
+*.db
