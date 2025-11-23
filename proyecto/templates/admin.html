@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Consola de administración - Iquique Ciberseguridad</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">IC</div>
+      <div class="title">Iquique Ciberseguridad</div>
+    </div>
+    <nav class="nav">
+      <a class="nav-item active" href="/admin">Dashboard</a>
+      <a class="nav-item" href="#features">Caracteristicas</a>
+      <a class="nav-item" href="#services">Servicios</a>
+    </nav>
+    <div class="sidebar-footer">v1.0</div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <h1>Consola de administración</h1>
+      </div>
+      <div class="top-right">
+        <button id="refresh" class="btn ghost">Actualizar</button>
+      </div>
+    </header>
+
+    <section class="container">
+      <div class="grid">
+        <div class="card big">
+          <h2>Resumen</h2>
+          <p class="muted">Estado general del sistema y accesos rápidos.</p>
+          <div class="quick">
+            <div class="metric"><div class="num" id="num-services">—</div><div class="label">Servicios online</div></div>
+            <div class="metric"><div class="num" id="num-features">—</div><div class="label">Caracteristicas activas</div></div>
+          </div>
+        </div>
+
+        <div class="card" id="services-card">
+          <h3>Servicios</h3>
+          <div id="services-status">Cargando...</div>
+        </div>
+
+        <div class="card" id="features-card">
+          <h3 id="features">Caracteristicas</h3>
+          <div id="features-list">Cargando...</div>
+        </div>
+
+        <div class="card" id="project-overview">
+          <h3>Plataforma de seguridad para PYMEs de Iquique</h3>
+          <p class="muted">
+            Solución web accesible para PYMEs: análisis de configuración, alertas en tiempo real y capacitación.
+            Evalúa contraseñas, puertos y software; notifica riesgos y ofrece guías prácticas.
+          </p>
+          <ul>
+            <li>Objetivo: proteger PYMEs con recursos limitados</li>
+            <li>Módulos: Análisis • Alertas • Capacitación</li>
+            <li>Arquitectura: frontend HTML/CSS/JS + backend Python (API segura)</li>
+          </ul>
+          <div style="margin-top:10px;">
+            <button id="demo-scan" class="btn">Ejecutar análisis rápido</button>
+            <button id="export-report" class="btn" style="margin-left:8px">Exportar informe</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/admin.js"></script>
+</body>
+</html>

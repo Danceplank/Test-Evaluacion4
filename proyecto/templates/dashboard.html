@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GravityZone Business Security</title>
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>GravityZone Business Security</h1>
+            <div class="header-stats">
+                <div class="stat-card">
+                    <h3>Endpoints Protegidos</h3>
+                    <span id="protected-endpoints">0</span>
+                </div>
+                <div class="stat-card">
+                    <h3>Amenazas Bloqueadas</h3>
+                    <span id="threats-blocked">0</span>
+                </div>
+                <div class="stat-card">
+                    <h3>Puntaje Seguridad</h3>
+                    <span id="security-score">100%</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <div class="security-overview">
+                <h2>Resumen de Seguridad</h2>
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <h4>Protección Ransomware</h4>
+                        <div class="status-indicator active"></div>
+                        <span>ACTIVA</span>
+                    </div>
+                    <div class="overview-card">
+                        <h4>Network Defense</h4>
+                        <div class="status-indicator active"></div>
+                        <span>ACTIVA</span>
+                    </div>
+                    <div class="overview-card">
+                        <h4>Protección Web</h4>
+                        <div class="status-indicator active"></div>
+                        <span>ACTIVA</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-threats">
+                <h2>Amenazas Recientes</h2>
+                <div id="threats-list" class="threats-list"></div>
+            </div>
+
+            <div class="real-time-events">
+                <h2>Eventos en Tiempo Real</h2>
+                <div id="events-feed" class="events-feed"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "ransomware": {
+    "name": "Protección multicapa contra ransomware",
+    "enabled": true
+  },
+  "network_defense": {
+    "name": "Network Attack Defense",
+    "enabled": true
+  },
+  "endpoint_protection": {
+    "name": "Protección de endpoints en tiempo real",
+    "enabled": true
+  },
+  "cloud_security": {
+    "name": "Seguridad basada en la nube",
+    "enabled": true
+  }
+}
