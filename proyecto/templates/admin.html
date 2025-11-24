@@ -47,8 +47,31 @@
         </div>
 
         <div class="card" id="features-card">
-          <h3 id="features">Caracteristicas</h3>
+          <h3 id="features">Features</h3>
           <div id="features-list">Cargando...</div>
+        </div>
+
+        <!-- Devices card -->
+        <div class="card" id="devices-card">
+          <h3 id="devices">Dispositivos</h3>
+          <div style="margin-bottom:8px">
+            <button id="add-device-btn" class="btn">Agregar dispositivo</button>
+          </div>
+          <div id="devices-list">Cargando...</div>
+
+          <!-- simple inline form (hidden) -->
+          <div id="device-form" style="display:none;margin-top:12px">
+            <input id="device-id" type="hidden" />
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <input id="device-hostname" placeholder="Hostname" />
+              <input id="device-ip" placeholder="IP address" />
+              <input id="device-os" placeholder="Sistema operativo" />
+            </div>
+            <div style="display:flex;gap:8px">
+              <button id="device-save" class="btn">Guardar</button>
+              <button id="device-cancel" class="btn ghost">Cancelar</button>
+            </div>
+          </div>
         </div>
 
         <div class="card" id="project-overview">

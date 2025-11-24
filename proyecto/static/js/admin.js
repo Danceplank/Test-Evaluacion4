@@ -117,7 +117,96 @@ async function simulateAlert(seedMsg) {
   el.prepend(a);
 }
 
-document.addEventListener('DOMContentLoaded', ()=>{
+// Devices CRUD client
+async function fetchDevices() {
+  try {
+    const res = await fetch('/api/v1/devices');
+    const j = await res.json();
+    renderDevices(j.devices || []);
+  } catch (e) {
+    document.getElementById('devices-list').innerText = 'Error cargando dispositivos: ' + e.message;
+  }
+}
+
+function renderDevices(devices) {
+  const el = document.getElementById('devices-list');
+  el.innerHTML = '';
+  if (devices.length === 0) {
+    el.innerText = 'No hay dispositivos registrados.';
+    return;
+  }
+  devices.forEach(d => {
+    const row = document.createElement('div');
+    row.className = 'feature';
+    row.innerHTML = `<div>
+        <div style="font-weight:600">${d.hostname} <span style="font-size:12px;color:var(--muted)">(${d.ip_address || '—'})</span></div>
+        <div style="font-size:12px;color:var(--muted)">${d.os || ''} • Últ. conexión: ${d.last_seen? d.last_seen.split('T')[0] : '—'}</div>
+      </div>`;
+    const controls = document.createElement('div');
+    const edit = document.createElement('button');
+    edit.className = 'btn';
+    edit.innerText = 'Editar';
+    edit.onclick = () => showDeviceForm(d);
+    const del = document.createElement('button');
+    del.className = 'btn ghost';
+    del.innerText = 'Eliminar';
+    del.onclick = async () => {
+      if (!confirm('Eliminar dispositivo?')) return;
+      await fetch(`/api/v1/devices/${d.id}`, { method: 'DELETE' });
+      fetchDevices();
+    };
+    controls.appendChild(edit);
+    controls.appendChild(del);
+    row.appendChild(controls);
+    el.appendChild(row);
+  });
+}
+
+function showDeviceForm(d) {
+  document.getElementById('device-form').style.display = 'block';
+  document.getElementById('device-id').value = d?.id || '';
+  document.getElementById('device-hostname').value = d?.hostname || '';
+  document.getElementById('device-ip').value = d?.ip_address || '';
+  document.getElementById('device-os').value = d?.os || '';
+}
+
+function hideDeviceForm() {
+  document.getElementById('device-form').style.display = 'none';
+  document.getElementById('device-id').value = '';
+  document.getElementById('device-hostname').value = '';
+  document.getElementById('device-ip').value = '';
+  document.getElementById('device-os').value = '';
+}
+
+async function saveDevice() {
+  const id = document.getElementById('device-id').value;
+  const payload = {
+    hostname: document.getElementById('device-hostname').value,
+    ip_address: document.getElementById('device-ip').value,
+    os: document.getElementById('device-os').value,
+  };
+  try {
+    if (id) {
+      await fetch(`/api/v1/devices/${id}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    } else {
+      await fetch('/api/v1/devices', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    }
+    hideDeviceForm();
+    fetchDevices();
+  } catch (e) {
+    alert('Error guardando dispositivo: ' + e.message);
+  }
+}
+
+// Hook device UI
+document.addEventListener('DOMContentLoaded', () => {
+  const addBtn = document.getElementById('add-device-btn');
+  if (addBtn) addBtn.onclick = () => showDeviceForm({});
+  const cancel = document.getElementById('device-cancel');
+  if (cancel) cancel.onclick = () => hideDeviceForm();
+  const save = document.getElementById('device-save');
+  if (save) save.onclick = () => saveDevice();
+
   document.getElementById('refresh').onclick = updateSummary;
   updateSummary();
   setInterval(updateSummary, 30000);
@@ -138,4 +227,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     a.href = url; a.download = 'informe-demo.json'; a.click();
     URL.revokeObjectURL(url);
   };
+
+  // Ensure devices load with other data
+  fetchDevices();
 });

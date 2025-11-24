@@ -1,23 +1,12 @@
-from fastapi import APIRouter, Depends, BackgroundTasks, HTTPException
+from typing import Any, Dict, List
+from fastapi import APIRouter, Depends, BackgroundTasks, HTTPException, Path
 from sqlalchemy.orm import Session
-from typing import Any, Dict
 
-# Use the proyecto package imports so modules resolve when run from workspace root
 from proyecto.app.database.database import get_db
 from proyecto.app.features import get_all_features, set_feature
 
-# Import services via proyecto.services (they live under proyecto/services/)
-try:
-    from proyecto.services.ransomware_protection import RansomwareProtectionService
-    from proyecto.services.endpoint_protection import EndpointProtectionService
-    from proyecto.services.network_defense import NetworkAttackDefenseService
-except Exception:
-    class RansomwareProtectionService:
-        def __init__(self, db: Session | None = None): pass
-    class EndpointProtectionService:
-        def __init__(self, db: Session | None = None): pass
-    class NetworkAttackDefenseService:
-        def __init__(self, db: Session | None = None): pass
+# Import Device model
+from proyecto.modelo.device import Device
 
 router = APIRouter()
 
@@ -87,3 +76,65 @@ def start_ransomware_scan(background_tasks: BackgroundTasks, db: Session = Depen
             pass
     background_tasks.add_task(_scan)
     return {"started": True}
+
+
+# Devices CRUD
+
+@router.get("/devices", tags=["devices"])
+def list_devices(db: Session = Depends(get_db)) -> Dict[str, Any]:
+    devices = db.query(Device).order_by(Device.id.desc()).all()
+    return {"devices": [d.to_dict() for d in devices]}
+
+
+@router.post("/devices", tags=["devices"])
+def create_device(payload: Dict[str, Any], db: Session = Depends(get_db)):
+    hostname = payload.get("hostname")
+    if not hostname:
+        raise HTTPException(status_code=400, detail="hostname is required")
+    d = Device(
+        hostname=hostname,
+        ip_address=payload.get("ip_address"),
+        os=payload.get("os"),
+        active=bool(payload.get("active", True)),
+    )
+    db.add(d)
+    db.commit()
+    db.refresh(d)
+    return d.to_dict()
+
+
+@router.get("/devices/{device_id}", tags=["devices"])
+def get_device(device_id: int = Path(..., ge=1), db: Session = Depends(get_db)):
+    d = db.query(Device).filter(Device.id == device_id).first()
+    if not d:
+        raise HTTPException(status_code=404, detail="Device not found")
+    return d.to_dict()
+
+
+@router.put("/devices/{device_id}", tags=["devices"])
+def update_device(device_id: int, payload: Dict[str, Any], db: Session = Depends(get_db)):
+    d = db.query(Device).filter(Device.id == device_id).first()
+    if not d:
+        raise HTTPException(status_code=404, detail="Device not found")
+    if "hostname" in payload:
+        d.hostname = payload["hostname"]
+    if "ip_address" in payload:
+        d.ip_address = payload["ip_address"]
+    if "os" in payload:
+        d.os = payload["os"]
+    if "active" in payload:
+        d.active = bool(payload["active"])
+    db.add(d)
+    db.commit()
+    db.refresh(d)
+    return d.to_dict()
+
+
+@router.delete("/devices/{device_id}", tags=["devices"])
+def delete_device(device_id: int, db: Session = Depends(get_db)):
+    d = db.query(Device).filter(Device.id == device_id).first()
+    if not d:
+        raise HTTPException(status_code=404, detail="Device not found")
+    db.delete(d)
+    db.commit()
+    return {"deleted": True, "id": device_id}
