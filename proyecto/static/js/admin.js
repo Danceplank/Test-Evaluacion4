@@ -167,7 +167,13 @@ function showDeviceForm(d) {
   document.getElementById('device-id').value = d?.id || '';
   document.getElementById('device-hostname').value = d?.hostname || '';
   document.getElementById('device-ip').value = d?.ip_address || '';
-  document.getElementById('device-os').value = d?.os || '';
+  // set select value (use first option if undefined)
+  const osSelect = document.getElementById('device-os');
+  if (d?.os && Array.from(osSelect.options).some(o => o.value === d.os)) {
+    osSelect.value = d.os;
+  } else {
+    osSelect.selectedIndex = 0; // default to first option (Linux)
+  }
 }
 
 function hideDeviceForm() {
@@ -175,7 +181,7 @@ function hideDeviceForm() {
   document.getElementById('device-id').value = '';
   document.getElementById('device-hostname').value = '';
   document.getElementById('device-ip').value = '';
-  document.getElementById('device-os').value = '';
+  document.getElementById('device-os').selectedIndex = 0;
 }
 
 async function saveDevice() {
@@ -183,7 +189,7 @@ async function saveDevice() {
   const payload = {
     hostname: document.getElementById('device-hostname').value,
     ip_address: document.getElementById('device-ip').value,
-    os: document.getElementById('device-os').value,
+    os: document.getElementById('device-os').value, // read from select
   };
   try {
     if (id) {

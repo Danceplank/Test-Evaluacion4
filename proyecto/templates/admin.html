@@ -65,7 +65,13 @@
             <div style="display:flex;gap:8px;margin-bottom:8px">
               <input id="device-hostname" placeholder="Hostname" />
               <input id="device-ip" placeholder="IP address" />
-              <input id="device-os" placeholder="Sistema operativo" />
+              <!-- changed: OS input -> select -->
+              <select id="device-os" aria-label="Sistema operativo">
+                <option value="Linux">Linux</option>
+                <option value="Windows">Windows</option>
+                <option value="macOS">macOS</option>
+                <option value="Other">Otro</option>
+              </select>
             </div>
             <div style="display:flex;gap:8px">
               <button id="device-save" class="btn">Guardar</button>
